@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta cherset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConcefSA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stilo.css' ) }}"> <!--Link para o arquivo css-->
+</head>
+<body>
+    <header>
+    <h1>Bem-vindo a ConcefSA.</h1>
+    <p>Olá, {{ current_user.nome }}! <a href="{{ url_for('logout') }}">Sair</a></p>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('saldo') }}"> Saldo</a></li>
+            <li><a href="{{ url_for('meio_pagamento') }}">Ária de pagamento</a></li>
+            <li><a href="{{ url_for('consulta') }}">Consulta passagem</a></li>
+            <li><a href="{{ url_for('cadastro') }}">Área de cadastro</a></li>
+            <li><a href="{{ url_for('extrato') }}">Extrato</a><li>
+        </ul>
+    </nav>
+    <main>
+        <section id="saldo">
+            <h2>Saldo</h2>
+            <p>Saldo atual: R$ 0,00</p>
+        </section>
+        <section id="pagamento">
+            <h2>Ária de pagamento</h2>
+            <p>Aqui você pode realizar seus pagamentos.</p>
+        </section>
+        <section id="consulta">
+            <h2>Consulta de passagem</h2>
+            <p>Consulte suas passagens aqui.</p>
+        </section>
+        <section id="cadastro">
+            <h2>Ária de cadastro</h2>
+            <p>Cadasre-se ou faça login para acessar mais recursos.</p>
+        </section>
+        <section id="estrato">
+            <h2>Extrato</h2>
+            <p>Veja seu extrato de transações aqui.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 ConcefSA. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>

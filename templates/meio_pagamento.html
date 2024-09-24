@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, inital-scale=0.1">
+    <title>Pagamento</title>
+    <link rel="stylesheet" href="estilo.css"> 
+</head>
+<body>
+    <hader>
+        <h1>Página de Pagamento</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Formas de Pagamento</h2>
+            <form id="pix-form">
+                <h3>PIX</h3>
+                <label>Chave PIX:</label>
+                <input type"text" name="chave-pix">
+                <label>Valor</label>
+                <input type="text" name="valor-pix">
+                <button type="submit">Realizar Pagamento</button>
+            </form>
+            <p>Ou selecione outra forma de pagamento:</p>
+            <ul>
+                <li><a href="#cartao">Cartão de Crédito</a></li>
+                <li><a href="#boleto">Boleto Bancário</a></li>
+                <li><a href="#transferencia">Transferência Bancária</a></li>
+            </ul>
+        </section>
+            <section id="cartao">
+                <h2>Cartão de Crédito</h2>
+                <form>
+                    <label>Nome do Cartão:</label>
+                    <input type="radio" name="pagamento" value="cartao">
+                    <label> Número do Cartão:</label>
+                    <input type="text" name="numero-cartao">
+                    <label>Validade:</label>
+                    <input type="text" name="validade-cartao">
+                    <label>Código de segurança:</label>
+                    <input type="text" name="codigo-seguranca-cartao">
+                    <button type="submit">Pagar</button>
+                </form>
+            </section>
+            <section id="boleto">
+                <h2>Boleto Bancário</h2>
+                <form>
+                <label>Número do Boleto:</label>
+                <input type="text" name="numero-boleto">
+                <label>Data de vencimento:</label>
+                <input type="date" neme="data-vencimento-boleto" value="<php echo date('Y-m-d', strtotime('+1 day')); ?>">
+                <label>Prazo de validade:</label>
+                <input type="text" name="prazo-validade-boleto" value= "1 dia útil" readonly>
+                <button type="submit">Pagar</button>
+                </form>
+            </section>
+            <section id="transferencia">
+                <h2>Transferência Bancária</h2>
+                <form>
+                    <label>Número da Conta:</label>
+                    <input type="text" name="numero-conta">
+                    <label>Agência:</label>
+                    <input type="text" name="agencia">
+                    <button type="submit">Pagar</button>
+                </form>
+            </section>       
+
+</main>
+</body>
+</html>    

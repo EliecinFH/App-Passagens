@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, inital-scale=0.1">
+    <title>Pagamento</title>
+    <link rel="stylesheet" href="estilo.css"> 
+</head>
+<body>
+    <hader>
+        <h1>Boleto</h1>
+    </header>
+    <main>
+        <section id="boleto">
+            <h2>Boleto Bancário</h2>
+            <form>
+            <label>Número do Boleto:</label>
+            <input type="text" name="numero-boleto">
+            <label>Data de vencimento:</label>
+            <input type="date" neme="data-vencimento-boleto" value="<php echo date('Y-m-d', strtotime('+1 day')); ?>">
+            <label>Prazo de validade:</label>
+            <input type="text" name="prazo-validade-boleto" value= "1 dia útil" readonly>
+            <button type="submit">Pagar</button>
+            </form>
+        </section>
+    </main>
+</body>
