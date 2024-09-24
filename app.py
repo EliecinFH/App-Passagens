@@ -1,6 +1,6 @@
 """
 App concef
-Este é o código fonte do app ConcefSA.
+Este é o código fonte do app .
 """
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -18,7 +18,7 @@ from logging import getLogger, ERROR
 # from flash_babel import gettext as _
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///concefSA.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///.db"
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(16)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
