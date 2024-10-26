@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" contnet="width=device-width", initial-scale=1.0>
+    <title>Pagamento de passagem - ConcefSA</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ConcefSA</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('payment.saldo') }}">Saldo</a></li>
+                <li><a href="{{ url_for('payment.recarga') }}">Recarga</a></li>
+                <li><a href="{{ url_for('passage.historico') }}">Histórico</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Pagamento de passagem</h2>
+        <form method="POST" action="{{ url_for('paymnet.pagamento_passagem') }}">
+            <label for="numero_registro">Número do Registro: </label>
+            <input type="text" id="numero_registro" name="numero_registro" required>
+
+            <label for="placa_veiculo">Placa do Veículo: </label>
+            <input type="text" id="placa_veiculo" name="placa_veiculo" required>
+
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+
+            <button type="submit">Efetuar Pagamento</button>
+        </form>
+
+    </main>
+    <footer>
+        <p>&copy; 2024 ConcefSA</p>
+    </footer>         
+</body>
+</html>

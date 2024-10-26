@@ -14,6 +14,13 @@ import email_validator
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import getLogger, ERROR
+from .auth import auth
+from .payment import payment
+from .passage import passage
+
+app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(payment, url_prefix='/payment')
+app.register_blueprint(passage, url_prefix='/passage')
 
 # from flash_babel import gettext as _
 
@@ -57,6 +64,7 @@ class Usuario(db.Model, UserMixin):
     cidade = db.Column(db.String(50), nullable=True)
     estado = db.Column(db.String(50), nullable=True)
     cep = db.Column(db.String(9), nullable=True)
+    saldo = bd.Column(db.Float, default=0.0)
 
     def __init__(self, nome, email, senha, cpf, telefone, endereco, cidade, estado, cep):
         self.nome = nome
@@ -69,7 +77,7 @@ class Usuario(db.Model, UserMixin):
         self.estado = estado
         self.cep = cep
 
-def validate_email(email):
+def validate_email(email: any) -> bool:
     """
     Valide um endereço de e-mail usado a biblioteca do validador de e-mail
     :para email: Endereço de email valido
@@ -147,7 +155,7 @@ def login():
     if request.method == "POST":
         nome = request.form["email"]
         senha = request.form["senha"]
-        usuario = Usuario.query.filter_by(nome=nome).first()
+        usuario = Usuario.query.filter_by(email=nome).first()
         if usuario and bcrypt.check_password_hash(usuario.senha, senha):
             login_user(usuario)
             flash("login realizado com sucesso!", "success")
@@ -168,23 +176,46 @@ def cadastro():
         nome = request.form["nome"]
         email = request.form["email"]
         senha = request.form["senha"]
-
+        """
+        cpf = request.from["cpf"]
+        telefone = request.from["telefone"]
+        endereco = request.from["endereco"]
+        cidade = request.from["cidade"]
+        estado = request.from["estado"]
+        cep = request.from["cep"]
+        """
         # Validar o e-mail
-        try:
-            email_validator.validate_email(email)
-        except email_validator.EmailNotValidError:
-            flash('Nome e senha são obrigatórios')
+        if not validate_email(email):
+            flash('E-mail inválido.', 'danger')
             return redirect(url_for('cadastro'))
-        
+
+        # Verificar se o usuário já existe
+        existing_user = Usuario.query.filter_by(email=email).first()
+        if existing_user:
+            flash('E-mail já cadastrado.', 'danger')
+            return redirect(url_for('cadastro'))
+
         # Salvar os dados no banco de dados
-        user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash('secret', senha, 10).decode('utf-8'),
+        user = Usuario(nome=nome, email=email, senha=senha """ cpf=cpf, telefone=telefone, endereco=endereco, cidade=cidade, estado=estado, cep=cep""")
+        db.session.add(user)
+        try:
+            db.session.commit()
+            flash('Usuário cadastrado com sucesso!', 'success')
+            return redirect(url_for('login'))
+        except IntegrityError:
+            db.session.rollback()
+            return redirect(url_for('cadastro'))
+    return render_template('cadastro.html')
+        
+"""        # Salvar os dados no banco de dados
+        user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash:('secret', senha, 10).decode('utf-8'),
                        cpf=request.form['cpf'], telefone=request.form['telefone'], endereco=request.form['endereco'],
                        cidade=request.form['cidade'], estado=request.form['estado'], cep=request.form['cep'])
         db.session.add(user)
         db.session.commit()
         flash('Usuário cadastrado com sucesso!', 'uccess')
         return redirect(url_for('index'))
-    return render_template('cadastro.html')
+    return render_template('cadastro.html')"""
 
 # Rota para a pagina de meio de pagamento
 @app.route("/meio_pagamento")
@@ -227,34 +258,16 @@ def pagamento_passagem():
         usuario = Usuario.query.get(current_user.id) # Obtenha o usuário atual
         passagem = Passagem(numero_registro=numero_registro, placa_veiculo=placa_veiculo, data=data, usuario=usuario)
         db.session.add(passagem)
-        db.session.commit()
-        return redirect(url_for("index"))
+        try:
+            db.session.commit()
+            flash("Passagem registrada com sucesso!", "success")
+            return redirect(url_for("index"))
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f"Error registering passage: {e}")
+            flash("Erro ao registrar passagem. tente novamente.", "danger")
+            return redirect(url_for("pagamento_passagem"))
     return render_template("pagamento_passagem.html")
-
-    '''try:
-        if request.method == "POST":
-            numero_registro = request.form["numero_registro"]
-            placa_veiculo = request.form["placa_veiculo"]
-            data = request.form["data"]
-            #Consulta passagem por numero_registro, placa_veiculo e dados
-            passagem = Passagem.query.filter_by(numero_registro=numero_registro, placa_veiculo=placa_veiculo, data=data).first()
-            if passagem:
-                # Verifica se a passagem foi quitada
-                if passagem.pago:
-                    flash("Passagem já paga.")
-                    return redirect(url_for("index"))
-                else:
-                    # Renderiza página de pagamento com detalhes da passagem
-                    return render_template("pagamento_passagem.html", passagem=passagem)
-            else:
-                flash("Passagem não encontrada.")
-                return redirect(url_for("index"))
-            # Renderizar págian de consulta
-        return render_template("consulta_passagem.html")
-    except Exception as e:
-        logging.error(f"Error ao processar pagamento: {e}")
-        flash("Erro ao processar pagamento.")
-        return redirect(url_for("index"))'''
 
 if __name__ == "__main__":
     app.run(debug=True)

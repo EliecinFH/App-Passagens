@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" contnet="width=device-width", initial-scale=1.0>
+    <title>Saldo - ConcefSA</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <reader>
+        <h1>ConcefSA</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('payment.saldo') }}">Saldo</a></li>
+                <li><a href="{{ url_for('payment.recarga') }}">Recarga</a></li>
+                <li><a href="{{ url_for('passage.historico') }}">Histórico</a></li>
+                <li><a href=" {{ url_for('auth.logout') }}">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Seu Saldo</h2>
+        <p>R$ {{ saldo }}</p>
+    </main>
+    <footer>
+        <p>&copy; 2024 ConcefSA</p>
+    </footer>
+</body>
+</html>
