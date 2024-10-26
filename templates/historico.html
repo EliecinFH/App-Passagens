@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" contnet="width=device-width", initial-scale=1.0>
+    <title></title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
+    <title>Histórico de Passagens - ConcefSA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ConcefSA</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('payment.saldo') }}">Saldo</a></li>
+                <li><a href="{{ url_for('payment.recarga') }}">Recarga</a></li>
+                <li><a href="{{ url_for('passage.historico') }}">Histórico</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Histórico de Passagens</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Número do Registro</th>
+                    <th>Placa do veiculo</th>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Pago</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for passagem in passagens %}
+                <tr>
+                    <td>{{ passagem.numero_registro }}</td>
+                    <td>{{ passagem.placa_veiculo }}</td>
+                    <td>{{ passagem.data.strftime('%d/%m/%y') }}</td>
+                    <td>R$ {{ passagem.valor }}</td>
+                    <td>{% if passagem.pago %}Sim{% else %}Não{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 ConcefSA</P>
+    </footer>
+</body>
+</html>
