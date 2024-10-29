@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, request, redirect, url_for, render_template, flash
+from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from sqlalchemy.exc import IntegrityError
 from .models import Usuario, db
+from auth.validation import validate_email
 
 auth = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
@@ -10,18 +12,17 @@ bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.init_app(auth)
 login_manager.login_view = 'auth.login'
-
 @login_manager.user_loader
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
 
-@auth.rout("/login", methods=["GET", "POST"])
+@auth.route("/login", methods=["GET", "POST"])
 def login():
     """"
     Rota de login
-    Verifica se o usuário está logado e redireciona para a pagina unicial.
+    Verifica se o usuário está logado e redireciona para a pagina inicial.
     """
-    if request.method =="POST":
+    if request.method == "POST":
         email = request.form["email"]
         senha = request.form["senha"]
         usuario = Usuario.query.filter_by(email=email).first()
@@ -33,7 +34,7 @@ def login():
             flash("E-mail ou senha incorretos!", "danger")
     return render_template("login.html")
 
-@auth.rout("/cadastro", methods=['GET', 'POST'])
+@auth.route("/cadastro", methods=['GET', 'POST'])
 def cadastro():
     """
     Modelo de cadastro de usuário
@@ -59,7 +60,7 @@ def cadastro():
         # Verificar se o usuário já existe
         existing_user = Usuario.query.filter_by(email=email).first()
         if existing_user:
-            flash('E-mail já cadastrado.', 'denger')
+            flash('E-mail já cadastrado.', 'danger')
             return redirect(url_for('auth.cadastro'))
         
         # Salvar os dados no banco de dados
@@ -81,5 +82,5 @@ def cadastro():
 @login_required
 def logout():
     logout_user()
-    flash("Você sau da sua conta.", "info")
+    flash("Você saiu da sua conta.", "info")
     return redirect(url_for("auth.login"))

@@ -4,36 +4,43 @@ Este é o código fonte do app ConcefSA.
 """
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
 import secrets
-import email_validator
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import getLogger, ERROR
-from .auth import auth
-from .payment import payment
-from .passage import passage
+
+# Inicializar o aplicatico Flask
+app = Flask(__name__)
+
+# Configuração do flask
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///concefSA.db"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(16)
+
+# Inicializar extensões
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login
+
+# Importe os blueprints
+from auth import auth
+from payment import payment
+from auth.passage import passage
+from auth.models import Usuario, Passagem
 
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(payment, url_prefix='/payment')
 app.register_blueprint(passage, url_prefix='/passage')
 
-# from flash_babel import gettext as _
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///concefSA.db"
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(16)
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-
 # Inicializar o banco de dados
 with app.app_context():
     db.create_all()
 
+# Configuração de logging
 if not app.debug:
     # Criar arquivo de log
     log_file = 'concefSA.log'
@@ -44,86 +51,9 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     getLogger("werkzeug").setLevel(logging.INFO)
 
-# Configuração do flask-login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-
-class Usuario(db.Model, UserMixin):
-    """
-    Modelo de usúario
-    Representa um usuário do app
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(50), nullable=False, unique=True)
-    senha = db.Column(db.String(100), nullable=False)
-    cpf = db.Column(db.String(14), nullable=True)
-    telefone = db.Column(db.String(15), nullable=True)
-    endereco = db.Column(db.String(100), nullable=True)
-    cidade = db.Column(db.String(50), nullable=True)
-    estado = db.Column(db.String(50), nullable=True)
-    cep = db.Column(db.String(9), nullable=True)
-    saldo = bd.Column(db.Float, default=0.0)
-
-    def __init__(self, nome, email, senha, cpf, telefone, endereco, cidade, estado, cep):
-        self.nome = nome
-        self.email = email
-        self.senha = bcrypt.generate_password_hash(senha).decode("utf-8")
-        self.cpf = cpf
-        self.telefone = telefone
-        self.endereco = endereco
-        self.cidade = cidade
-        self.estado = estado
-        self.cep = cep
-
-def validate_email(email: any) -> bool:
-    """
-    Valide um endereço de e-mail usado a biblioteca do validador de e-mail
-    :para email: Endereço de email valido
-    :return: Endereço de e-mail validado ou nenhuma se for inválido
-    """
-    from email_validator import validate_email
-    try:
-        validate_email(email)
-        return True
-    except email_validator.EmailNotValidError:
-        return False
-    
-class MeioPagamento(db.Model):
-    """
-    Modelo de meio de pagamento
-    Representa um meio de pagamento do app
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuario.id"))
-    tipo = db.Column(db.String(50), nullable=False)
-    numero = db.Column(db.String(50), nullable=False)
-
-class Passagem(db.Model):
-    """
-    Modelo de passagem
-    Representa a consulta de uma passagem no app
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    numero_registro = db.Column(db.String(50), nullable=False)
-    placa_veiculo = db.Column(db.String(50), nullable=False)
-    data = db.Column(db.DateTime, nullable=False)
-    hora = db.Column(db.String(5), nullable=False)
-    valor = db.Column(db.Float, nullable=False)
-    pago = db.Column(db.Boolean, default=False)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuario.id"))
-    usuario = db.relationship('Usuario', backref=db.backref('passagens', lazy=True))
-
-    def __init__(self, numero_registro, placa_veiculo, data, hora, valor, usuario_id=usuario_id):
-        self.numero_registro = numero_registro
-        self.placa_veiculo = placa_veiculo
-        self.data = data
-        self.hora = hora
-        self.valor = valor
-        self.pago = False
-        self.usuario = Usuario
-        self.usuario_id = usuario_id
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuario.query.get(int(user_id))
 
 @app.route("/")
 @login_required
@@ -134,7 +64,6 @@ def index():
         logging.error(f"Error in index funtion: {e}")
         return "Erro interno do servidor", 500
     
-
 @app.route("/logout")
 @login_required
 def logout():
@@ -142,17 +71,14 @@ def logout():
     flash("Você saiu da sua conta.", "info")
     return redirect(url_for("login"))
 
-@login_manager.user_loader
-def load_user(user_id):
-    return Usuario.query.get(int(user_id))
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """
-    Rote de login
+    Rota de login
     Verifica se o usúario está logado e redireciona para a pagian inicial.
     """
     if request.method == "POST":
+        # Pegar os dados do formulario
         nome = request.form["email"]
         senha = request.form["senha"]
         usuario = Usuario.query.filter_by(email=nome).first()
@@ -176,19 +102,13 @@ def cadastro():
         nome = request.form["nome"]
         email = request.form["email"]
         senha = request.form["senha"]
-        """
-        cpf = request.from["cpf"]
-        telefone = request.from["telefone"]
-        endereco = request.from["endereco"]
-        cidade = request.from["cidade"]
-        estado = request.from["estado"]
-        cep = request.from["cep"]
-        """
-        # Validar o e-mail
-        if not validate_email(email):
-            flash('E-mail inválido.', 'danger')
-            return redirect(url_for('cadastro'))
-
+        cpf = request.form["cpf"]
+        telefone = request.form["telefone"]
+        endereco = request.form["endereco"]
+        cidade = request.form["cidade"]
+        estado = request.form["estado"]
+        cep = request.form["cep"]
+        
         # Verificar se o usuário já existe
         existing_user = Usuario.query.filter_by(email=email).first()
         if existing_user:
@@ -196,7 +116,7 @@ def cadastro():
             return redirect(url_for('cadastro'))
 
         # Salvar os dados no banco de dados
-        user = Usuario(nome=nome, email=email, senha=senha """ cpf=cpf, telefone=telefone, endereco=endereco, cidade=cidade, estado=estado, cep=cep""")
+        user = Usuario(nome=nome, email=email, senha=senha, cpf=cpf, telefone=telefone, endereco=endereco, cidade=cidade, estado=estado, cep=cep)
         db.session.add(user)
         try:
             db.session.commit()
@@ -207,15 +127,15 @@ def cadastro():
             return redirect(url_for('cadastro'))
     return render_template('cadastro.html')
         
-"""        # Salvar os dados no banco de dados
-        user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash:('secret', senha, 10).decode('utf-8'),
-                       cpf=request.form['cpf'], telefone=request.form['telefone'], endereco=request.form['endereco'],
-                       cidade=request.form['cidade'], estado=request.form['estado'], cep=request.form['cep'])
-        db.session.add(user)
-        db.session.commit()
-        flash('Usuário cadastrado com sucesso!', 'uccess')
-        return redirect(url_for('index'))
-    return render_template('cadastro.html')"""
+    # Salvar os dados no banco de dados
+    user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash('secret', senha, 10).decode('utf-8'),
+                    cpf=request.form['cpf'], telefone=request.form['telefone'], endereco=request.form['endereco'],
+                    cidade=request.form['cidade'], estado=request.form['estado'], cep=request.form['cep'])
+    db.session.add(user)
+    db.session.commit()
+    flash('Usuário cadastrado com sucesso!', 'uccess')
+    return redirect(url_for('index'))
+
 
 # Rota para a pagina de meio de pagamento
 @app.route("/meio_pagamento")
@@ -223,7 +143,7 @@ def meio_pagamento():
     """
     Rota de meios de pagamento
     Retorna a lista de meios de pagamento
-    """
+   """
     meio_pagamento = MeioPagamento.query.all()
     return render_template("meios_pagamento.html", meio_pagamento=meio_pagamento)
 

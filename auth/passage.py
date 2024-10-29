@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import Passagem, db # Importe o modelo Passagem
-from .auth import login_required # Importe a função login_required
+from flask import Blueprint, request, redirect, url_for, flash, render_template
+from flask_login import login_required, current_user
+from auth.models import Usuario, Passagem, db
+from auth.validation import validate_email
+from flask_bcrypt import bcrypt
 
 passage = Blueprint('passage', __name__)
 
