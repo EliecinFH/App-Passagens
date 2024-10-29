@@ -24,7 +24,7 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_urlsafe
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login
+login_manager.login_view = 'login'
 
 # Importe os blueprints
 from auth import auth
