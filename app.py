@@ -2,6 +2,7 @@
 App concef
 Este é o código fonte do app .
 """
+<<<<<<< HEAD
 import sys
 import os
 from dotenv import load_dotenv
@@ -10,6 +11,12 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from extensions import db
 from auth.models import Usuario, Passagem, MeioPagamento, Veiculo
+=======
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from extensions import db
+from auth.models import Usuario, Passagem
+# from flask_sqlalchemy import SQLAlchemy
+>>>>>>> 0b4b9f3 (update)
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -33,15 +40,22 @@ from flask_migrate import Migrate
 from auth.auth import auth
 from payment.payment import payment
 from auth.passage import passage
+<<<<<<< HEAD
 from veiculo import veiculo
 
 # Carregar variáveis de ambiente
 load_dotenv()
 
 # Inicializar o aplicativo Flask
+=======
+
+
+# Inicializar o aplicatico Flask
+>>>>>>> 0b4b9f3 (update)
 app = Flask(__name__)
 csrf = CSRFProtect(app)
 
+<<<<<<< HEAD
 # Configuração do banco de dados
 instance_path = os.path.join(os.path.dirname(__file__), 'instance')
 os.makedirs(instance_path, exist_ok=True)
@@ -67,11 +81,22 @@ db.init_app(app)
 
 # Inicializar extensões
 from extensions import db
+=======
+
+# Configuração do banco de dados
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///concefSA.db"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(16)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
+
+# Inicializar extensões
+>>>>>>> 0b4b9f3 (update)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 migrate = Migrate(app, db)
 
+<<<<<<< HEAD
 # Configuração do Flask-Mail
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
@@ -82,6 +107,8 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
 mail = Mail(app)
 
+=======
+>>>>>>> 0b4b9f3 (update)
 # Registrando o blueprints
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(payment, url_prefix='/payment')
@@ -95,6 +122,7 @@ with app.app_context():
 
 # Configuração de logging
 if not app.debug:
+<<<<<<< HEAD
     # Configurar logging para arquivo
     if not os.path.exists('logs'):
         os.mkdir('logs')
@@ -158,6 +186,13 @@ def login_google():
     flash("Login com Google ainda não implementado.", "info")
     return redirect(url_for("login"))
 
+=======
+    log_handler = RotatingFileHandler('error.log', maxBytes=100000, backupCount=1)
+    log_handler.setLevel(ERROR)
+    app.logger.addHandler(log_handler)
+    app.logger.setLevel(logging.INFO)
+    getLogger("werkzeug").setLevel(logging.INFO)
+>>>>>>> 0b4b9f3 (update)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -170,8 +205,13 @@ def load_user(user_id):
 
 @app.route("/")
 @login_required
+<<<<<<< HEAD
 def home():
     """
+=======
+def index():
+    """"
+>>>>>>> 0b4b9f3 (update)
     Rota principal da aplicação.
     Renderiza a página inicial.
     """
@@ -402,6 +442,33 @@ def cadastro():
     Rota represnta o cadastro de usuario no app.
     """
     if request.method == "POST":
+<<<<<<< HEAD
+=======
+        # Pegar os dados do formulário
+        nome = request.form["nome"]
+        email = request.form["email"]
+        senha = request.form["senha"]
+        cpf = request.form["cpf"]
+        telefone = request.form["telefone"]
+        endereco = request.form["endereco"]
+        cidade = request.form["cidade"]
+        estado = request.form["estado"]
+        cep = request.form["cep"]
+        
+        # Verificar se o usuário já existe
+        existing_user = Usuario.query.filter_by(email=email).first()
+        if existing_user:
+            flash('E-mail já cadastrado.', 'danger')
+            return redirect(url_for('cadastro'))
+        
+        # Hash da senha antes de salvar
+        hashed_senha = bcrypt.generate_password_hash(senha).decode('utf-8')
+
+        # Salvar os dados no banco de dados
+        user = Usuario(nome=nome, email=email, senha=hashed_senha, cpf=cpf, telefone=telefone, endereco=endereco,
+                       cidade=cidade, estado=estado, cep=cep)
+        db.session.add(user)
+>>>>>>> 0b4b9f3 (update)
         try:
             nome = request.form["nome"]
             sobrenome = request.form["sobrenome"]
@@ -433,26 +500,26 @@ def cadastro():
             return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
+<<<<<<< HEAD
             app.logger.error(f"Erro ao cadastrar usuário: {e}")
             return render_template('erro.html', mensagem=str(e))
+=======
+            flash('Erro ao cadastrar o usuário. Tente novamente.', 'danger')
+            return redirect(url_for('cadastro'))
+>>>>>>> 0b4b9f3 (update)
     return render_template('cadastro.html')
-        
-    # Salvar os dados no banco de dados
-    user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash('secret', senha, 10).decode('utf-8'),
-                    cpf=request.form['cpf'], telefone=request.form['telefone'], endereco=request.form['endereco'],
-                    cidade=request.form['cidade'], estado=request.form['estado'], cep=request.form['cep'])
-    db.session.add(user)
-    db.session.commit()
-    flash('Usuário cadastrado com sucesso!', 'uccess')
-    return redirect(url_for('index'))
-
-
+    
 # Rota para a pagina de meio de pagamento
+<<<<<<< HEAD
 @app.route("/meio_pagamento", methods=["GET", "POST"])
+=======
+@app.route("/meio_pagamento")
+>>>>>>> 0b4b9f3 (update)
 @login_required
 def meio_pagamento():
     """
     Rota de meios de pagamento
+<<<<<<< HEAD
     Retorna a lista de meios de pagamento e processa pagamento via PIX
     """
     try:
@@ -474,6 +541,17 @@ def meio_pagamento():
         flash("Erro ao carregar meios de pagamento. Tente novamente.")
         return redirect(url_for("saldo"))
 
+=======
+    Retorna a lista de meios de pagamento
+   """
+    try:
+        meios_pagamento = MeioPagamento.query.all()
+        return render_template("meios_pagamento.html", meio_pagamento=meios_pagamento)
+    except Exception as e:
+        logging.error(f"Error fetching payment methods: {e}")
+        flash("Erro ao carregar meios de pagamento. Tente novamente.")
+        return redirect(url_for("index"))
+>>>>>>> 0b4b9f3 (update)
 
 @app.route("/saldo")
 @login_required
@@ -483,6 +561,7 @@ def saldo():
     Calcula o saldo com base nas passagens registradas.
     """
     try:
+<<<<<<< HEAD
         if not current_user.is_authenticated:
             flash("Sessão expirada. Faça login novamente.", "warning")
             return redirect(url_for("login"))
@@ -494,6 +573,19 @@ def saldo():
         current_user.saldo = saldo
         db.session.commit()
         login_user(current_user)
+=======
+        if current_user is None:
+            flash("Usuário não encontrado.")
+            return redirect(url_for("index"))
+        # Calcule saldo aqui
+        passagem = Passagem.query.filter_by(usuario_id=current_user.id).all()
+        saldo = sum(t.valor if t.tipo == 'credito' else -t.valor for t in passagem)
+
+        # Atualizar o saldo no objeto do usuário
+        current_user.saldo = saldo
+        db.session.commit()
+
+>>>>>>> 0b4b9f3 (update)
         return render_template("saldo.html", saldo=saldo)
     except Exception as e:
         logging.error(f"Error getting user saldo: {e}")
@@ -503,7 +595,11 @@ def saldo():
 
 # Rota consulta de passagem para quitação
 # e encaminha para efetuar o pagamento.
+<<<<<<< HEAD
 @app.route("/pagamento_passagem", methods=["POST"])
+=======
+@app.route("/pagamento-passagem", methods=["GET", "POST"])
+>>>>>>> 0b4b9f3 (update)
 @login_required
 def pagamento_passagem():
     """
@@ -513,6 +609,7 @@ def pagamento_passagem():
         numero_registro = request.form["numero_registro"]
         placa_veiculo = request.form["placa_veiculo"]
         data = request.form["data"]
+<<<<<<< HEAD
         # Validação básica dos dados
         if not all([
             numero_registro,
@@ -534,11 +631,29 @@ def pagamento_passagem():
             login_user(current_user)
             flash("Pagamento registrado com sucesso!", "success")
             return redirect(url_for("home"))
+=======
+
+        # Validação básica dos dados
+        if not all([numero_registro or not placa_veiculo or not data]):
+            flash("Todos os campos são obrigatórios.", "danger")
+            return redirect(url_for("pagamento_passagem"))
+
+        usuario = Usuario.query.get(current_user.id) # Obtenha o usuário atual
+        passagem = Passagem(numero_registro=numero_registro, placa_veiculo=placa_veiculo, data=data, usuario=usuario)
+
+        
+        try:
+            db.session.add(passagem)
+            db.session.commit()
+            flash("Pagamento registrado com sucesso!", "success")
+            return redirect(url_for("index"))
+>>>>>>> 0b4b9f3 (update)
         except Exception as e:
             db.session.rollback()
             logging.error(f"Error registering passage: {e}")
             flash("Erro ao registrar pagamento. tente novamente.", "danger")
             return redirect(url_for("pagamento_passagem"))
+        
     return render_template("pagamento_passagem.html")
 
 
