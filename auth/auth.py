@@ -1,9 +1,10 @@
 from flask import Blueprint, request, redirect, url_for, render_template, flash
+from .models import Usuario, db
+from .validation import validate_email
 from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
-from .models import Usuario, db
-from auth.validation import validate_email
+
 
 auth = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
@@ -12,6 +13,7 @@ bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.init_app(auth)
 login_manager.login_view = 'auth.login'
+
 @login_manager.user_loader
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
@@ -66,21 +68,22 @@ def cadastro():
         # Salvar os dados no banco de dados
         user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash(senha).decode("utf-8"), cpf=cpf, telefone=telefone,
                         endereco=endereco, cidade=cidade, estado=estado, cep=cep)
-    db.session.add(user)
-    try:
-        db.session.commit()
-        flash('Usuário cadastrado com sucesso', 'success')
-        return redirect(url_for('auth.login'))
-    except IntegrityError:
-        db.session.rollback()
-        flash('Erro ao cadastrar usuário.', 'danger')
-        return redirect(url_for('auth.cadastro'))
+        db.session.add(user)
+        try:
+            db.session.commit()
+            flash('Usuário cadastrado com sucesso', 'success')
+            return redirect(url_for('auth.login'))
+        except IntegrityError:
+            db.session.rollback()
+            flash('Erro ao cadastrar usuário. Tente novamente.', 'danger')
+            return redirect(url_for('auth.cadastro'))
     
     return render_template('cadastro.html')
-
+    
 @auth.route("/logout")
 @login_required
 def logout():
+    """ Rota para logout do usuário."""
     logout_user()
     flash("Você saiu da sua conta.", "info")
     return redirect(url_for("auth.login"))

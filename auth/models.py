@@ -1,6 +1,5 @@
 from flask_login import UserMixin
-from extensions import db
-from flask_bcrypt import bcrypt
+from extensions import db, bcrypt
 
 class Usuario(db.Model, UserMixin):
     """

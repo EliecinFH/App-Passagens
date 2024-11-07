@@ -2,9 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import IntegrityError
-from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from email_validator import EmailNotValidError
+from email_validator import validate_email as ev_validate_email, EmailNotValidError
 from auth.validation import validate_email
 import os
 import secrets
