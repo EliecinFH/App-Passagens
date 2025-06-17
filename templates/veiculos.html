@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h2 class="mb-4">Cadastrar Veículo</h2>
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" name="placa" class="form-control" placeholder="Placa" maxlength="10" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="modelo" class="form-control" placeholder="Modelo" maxlength="50" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="cor" class="form-control" placeholder="Cor" maxlength="30" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </div>
+            </div>
+        </form>
+        <h4 class="mt-4">Meus Veículos</h4>
+        <table class="table table-bordered table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Placa</th>
+                    <th>Modelo</th>
+                    <th>Cor</th>
+                    <th>Histórico</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for veiculo in veiculos %}
+                <tr>
+                    <td>{{ veiculo.placa }}</td>
+                    <td>{{ veiculo.modelo }}</td>
+                    <td>{{ veiculo.cor }}</td>
+                    <td>
+                        {% if historicos[veiculo.placa] %}
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in historicos[veiculo.placa] %}
+                                <tr>
+                                    <td>{{ p.data.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>R$ {{ '%.2f'|format(p.valor) }}</td>
+                                    <td>{% if p.pago %}Pago{% else %}Pendente{% endif %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}Sem passagens{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

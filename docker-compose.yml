@@ -1,0 +1,17 @@
+services:
+  cncf:
+    build: .
+    container_name: concef_passagens
+    ports:
+      - "5003:5000"  # Host port 5003 maps to container port 5000
+    volumes:
+      - .:/app  # Bind mount current directory to /app in container
+      - concef_db:/app/instance  # Mount volume to /app/instance directory
+    env_file:
+      - .env  # Make sure this file exists with required env vars
+    environment:
+      - FLASK_ENV=development
+    command: python app.py
+
+volumes:
+  concef_db:

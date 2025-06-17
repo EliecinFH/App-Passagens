@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h2 class="mb-4">Filtrar Passagens por Placa</h2>
+        <form method="GET" class="mb-4">
+            <div class="row">
+                <div class="col-8 col-md-6">
+                    <input type="text" name="placa" class="form-control" placeholder="Digite a placa" value="{{ placa }}" maxlength="10" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </form>
+        {% if placa %}
+        <h5>Resultados para: <span class="text-primary">{{ placa }}</span></h5>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in passagens %}
+                <tr>
+                    <td>{{ p.data.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>R$ {{ '%.2f'|format(p.valor) }}</td>
+                    <td>{% if p.pago %}Pago{% else %}Pendente{% endif %}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3">Nenhuma passagem encontrada para esta placa.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

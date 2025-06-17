@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Erro{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-4 shadow mx-auto text-center" style="max-width: 400px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Erro" style="width:80px; margin-bottom:20px;">
+        <h2 class="mb-3 text-danger">Ocorreu um erro!</h2>
+        <p class="text-danger">{{ mensagem }}</p>
+        <a href="/login" class="btn btn-primary mt-3">Voltar para o login</a>
+    </div>
+</div>
+{% endblock %}
