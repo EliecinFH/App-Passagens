@@ -54,7 +54,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 # Importe os blueprints
-from auth import auth
+from auth.auth import auth
 from payment import payment
 from auth.passage import passage
 from auth.models import Usuario, Passagem
