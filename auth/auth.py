@@ -31,7 +31,7 @@ def login():
         if usuario and bcrypt.check_password_hash(usuario.senha, senha):
             login_user(usuario)
             flash("Login realizado com sucesso!", "success")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
         else:
             flash("E-mail ou senha incorretos!", "danger")
     return render_template("login.html")

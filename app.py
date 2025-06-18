@@ -253,7 +253,7 @@ def login():
                 f"{usuario.email if usuario else None}"
             )
             flash("Login realizado com sucesso!", "success")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
         else:
             if usuario:
                 usuario.tentativas_login += 1
@@ -305,7 +305,7 @@ def verificar_2fa():
             login_user(current_user)
             session.pop('temp_user_id', None)
             flash("Login realizado com sucesso!", "success")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
         else:
             flash("Código inválido.", "danger")
     return render_template("verificar_2fa.html")
@@ -368,7 +368,7 @@ def configurar_2fa():
                     "Autenticação de dois fatores ativada com sucesso!",
                     "success"
                 )
-                return redirect(url_for("home"))
+                return redirect(url_for("index"))
             else:
                 flash("Código inválido.", "danger")
         elif acao == 'desativar':
@@ -379,7 +379,7 @@ def configurar_2fa():
             flash(
                 "Autenticação de dois fatores desativada.", "success"
             )
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
     return render_template("configurar_2fa.html")
 
 
@@ -538,7 +538,7 @@ def saldo():
     except Exception as e:
         logging.error(f"Error getting user saldo: {e}")
         flash("Erro ao calcular saldo. Tente novamente.")
-        return redirect(url_for("home"))
+        return redirect(url_for("index"))
 
 
 # Rota consulta de passagem para quitação
