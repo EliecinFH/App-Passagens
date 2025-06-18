@@ -4,7 +4,7 @@ Flask-Bcrypt==1.0.1
 Flask-Login==0.6.3
 Flask-WTF==1.1.1
 Flask-Mail==0.9.1
-SQLAlchemy==2.0.21
+SQLAlchemy==1.4.49
 qrcode==7.4.2
 pyotp==2.8.0
 Werkzeug==2.3.7
