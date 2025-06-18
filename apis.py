@@ -36,7 +36,7 @@ def google_login_callback():
     # Obtém informações do usuário do Google
     user_info = build('oauth2', 'v2', credentials=credentials).userinfo().get().execute()  # Corrigido: 'auth2' -> 'oauth2', 'user_infor' -> 'user_info'
     # Crie um usuário ou faça login (implementar essa lógica)
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 def realizar_pagamento_pix(valor, chave_pix):
     url = PIX_API_URL

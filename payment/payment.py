@@ -13,12 +13,12 @@ def saldo():
         current_user = Usuario.query.get(current_user.id)
         if current_user is None:
             flash("Usuário não encontrado.")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
         return render_template("saldo.html", saldo=current_user.saldo)
     except Exception as e:
         logging.error(f"Error getting user saldo: {e}")
         flash("Erro ao calcular saldo. Tente novamente.")
-        return redirect(url_for("home"))
+        return redirect(url_for("index"))
     
 
 @payment.route("/recarga", methods=["GET", "POST"])

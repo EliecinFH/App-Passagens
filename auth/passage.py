@@ -47,7 +47,7 @@ def pagamento_passagem():
                 db.session.commit()
                 login_user(current_user)
                 flash("Passagem paga com sucesso!", "success")
-                return redirect(url_for("home"))
+                return redirect(url_for("index"))
             else:
                 flash("Nenhuma passagem pendente encontrada para os dados informados.", "danger")
                 return redirect(url_for("pagamento_passagem"))
