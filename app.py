@@ -2,11 +2,15 @@
 App concef
 Este é o código fonte do app ConcefSA.
 """
-from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_wtf.csrf import CSRFProtect
+from flask_mail import Mail, Message
+from datetime import datetime
 import secrets
 import logging
 from logging.handlers import RotatingFileHandler
@@ -14,33 +18,41 @@ from logging import getLogger, ERROR
 
 # Inicializar o aplicatico Flask
 app = Flask(__name__)
-csrf = CSRFProtect(app)
 
-# Configuração do flask
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///concefSA.db"
+# Configuração do flask para produção
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///concefSA.db")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(16)
 
+# Configurações de email para produção
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+
 # Inicializar extensões
+db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+csrf = CSRFProtect(app)
+mail = Mail(app)
 
 # Importe os blueprints
 from auth import auth
 from payment import payment
 from auth.passage import passage
-from auth.models import Usuario, Passagem
+from auth.models import Usuario, Passagem, Veiculo
 
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(payment, url_prefix='/payment')
 app.register_blueprint(passage, url_prefix='/passage')
-app.register_blueprint(veiculo)
 
 # Inicializar o banco de dados
 with app.app_context():
     db.create_all()
 
-# Configuração de logging
+# Configuração de logging para produção
 if not app.debug:
     # Criar arquivo de log
     log_file = 'concefSA.log'
