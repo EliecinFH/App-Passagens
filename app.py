@@ -1,25 +1,15 @@
 """
 App concef
-Este é o código fonte do app .
+Este é o código fonte do app ConcefSA.
 """
-<<<<<<< HEAD
-import sys
-import os
-from dotenv import load_dotenv
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from extensions import db
-from auth.models import Usuario, Passagem, MeioPagamento, Veiculo
-=======
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from extensions import db
-from auth.models import Usuario, Passagem
-# from flask_sqlalchemy import SQLAlchemy
->>>>>>> 0b4b9f3 (update)
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_wtf.csrf import CSRFProtect
+from flask_mail import Mail, Message
+from datetime import datetime
 import secrets
 import logging
 from logging.handlers import RotatingFileHandler
@@ -53,74 +43,32 @@ load_dotenv()
 # Inicializar o aplicatico Flask
 >>>>>>> 0b4b9f3 (update)
 app = Flask(__name__)
-csrf = CSRFProtect(app)
 
-<<<<<<< HEAD
-# Configuração do banco de dados
-instance_path = os.path.join(os.path.dirname(__file__), 'instance')
-os.makedirs(instance_path, exist_ok=True)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('DATABASE_URL', f"sqlite:///{os.path.join(instance_path, 'concefSA.db')}")
-app.config['SESSION_COOKIE_NAME'] = 'concefsa_session'
-app.config['SESSION_PERMANENT'] = False
-from datetime import timedelta
-# Sessão expira após 1 hora
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
-app.config['SESSION_REFRESH_EACH_REQUEST'] = True
-
-# Gera uma SECRET_KEY aleatória a cada inicialização em modo debug/desenvolvimento
-if app.debug:
-    import secrets
-    app.config['SECRET_KEY'] = secrets.token_urlsafe(32)
-else:
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')  # Produção deve usar variável de ambiente
-
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ECHO"] = app.debug  # Log SQL queries in debug mode
-
-db.init_app(app)
-
-# Inicializar extensões
-from extensions import db
-=======
-
-# Configuração do banco de dados
+# Configuração do flask
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///concefSA.db"
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(16)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db.init_app(app)
 
 # Inicializar extensões
->>>>>>> 0b4b9f3 (update)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-migrate = Migrate(app, db)
 
-<<<<<<< HEAD
-# Configuração do Flask-Mail
-app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
-app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
-app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', True)
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
+# Importe os blueprints
+from auth import auth
+from payment import payment
+from auth.passage import passage
+from auth.models import Usuario, Passagem
 
-mail = Mail(app)
-
-=======
->>>>>>> 0b4b9f3 (update)
-# Registrando o blueprints
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(payment, url_prefix='/payment')
 app.register_blueprint(passage, url_prefix='/passage')
-app.register_blueprint(veiculo)
 
 # Inicializar o banco de dados
 with app.app_context():
     db.init_app(app)
     db.create_all()
 
-# Configuração de logging
+# Configuração de logging para produção
 if not app.debug:
 <<<<<<< HEAD
     # Configurar logging para arquivo

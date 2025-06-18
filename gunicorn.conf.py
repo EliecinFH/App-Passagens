@@ -1,0 +1,20 @@
+# Configuração do Gunicorn para deploy no Render
+bind = "0.0.0.0:10000"
+workers = 2
+worker_class = "sync"
+worker_connections = 1000
+timeout = 30
+keepalive = 2
+max_requests = 1000
+max_requests_jitter = 50
+preload_app = True
+reload = False
+daemon = False
+pidfile = None
+user = None
+group = None
+tmp_upload_dir = None
+errorlog = "-"
+accesslog = "-"
+loglevel = "info"
+access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"' 
