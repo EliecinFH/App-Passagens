@@ -40,7 +40,7 @@ mail = Mail(app)
 
 # Importe os blueprints
 from auth.auth import auth
-from payment import payment
+from payment.payment import payment
 from auth.passage import passage
 from auth.models import Usuario, Passagem, Veiculo
 
