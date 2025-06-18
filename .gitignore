@@ -1,4 +1,3 @@
-
 templates/index1.html
 
 try.py.txt
@@ -10,3 +9,109 @@ auth1.py
 payment/__init__.py
 payment/payment.py
 __init__.py
+
+# Arquivos de banco de dados
+*.db
+*.sqlite
+*.sqlite3
+instance/
+concefsa.db/
+app_passagens/app_passagens_dados/
+
+# Arquivos de cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Arquivos de ambiente e configuração
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Arquivos de log
+*.log
+logs/
+error.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# Arquivos de IDE e editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos do sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Arquivos específicos do projeto
+templates/index1.html
+try.py.txt
+auth1.py
+payment/__init__.py
+payment/payment.py
+__init__.py
+
+# Arquivos de migração (opcional - remova se quiser versionar)
+migrations/versions/*.py
+!migrations/versions/__init__.py
+
+# Arquivos de dados de teste
+passagens.xlsx
+passagens23.xlsx
+
+# Arquivos de configuração local
+alembic.ini
+migrate_setup.py
+
+# Arquivos de teste e desenvolvimento
+testa_conexao_db.py
+importa_teste.py
+popula_passagens.py
+cria_tabela_veiculo.py
+cria_usuario.py
+veiculo.py
+consulta_passagens.py
+
+# Arquivos de credenciais e chaves
+client_secret_*.json
+*.pem
+*.key
+*.crt
+
+# Arquivos de backup
+*.backup
+*.old

@@ -68,16 +68,15 @@ def cadastro():
         # Salvar os dados no banco de dados
         user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash(senha).decode("utf-8"), cpf=cpf, telefone=telefone,
                         endereco=endereco, cidade=cidade, estado=estado, cep=cep)
-        db.session.add(user)
-        try:
-            db.session.commit()
-            login_user(user)
-            flash('Usuário cadastrado com sucesso', 'success')
-            return redirect(url_for('auth.login'))
-        except IntegrityError:
-            db.session.rollback()
-            flash('Erro ao cadastrar usuário. Tente novamente.', 'danger')
-            return redirect(url_for('auth.cadastro'))
+    db.session.add(user)
+    try:
+        db.session.commit()
+        flash('Usuário cadastrado com sucesso', 'success')
+        return redirect(url_for('auth.login'))
+    except IntegrityError:
+        db.session.rollback()
+        flash('Erro ao cadastrar usuário.', 'danger')
+        return redirect(url_for('auth.cadastro'))
     
     return render_template('cadastro.html')
     
