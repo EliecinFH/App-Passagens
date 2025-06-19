@@ -65,7 +65,8 @@ def cadastro():
             return redirect(url_for('auth.cadastro'))
         
         # Salvar os dados no banco de dados
-        user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash(senha).decode("utf-8"), cpf=cpf, telefone=telefone,
+        senha_hash = bcrypt.generate_password_hash(senha).decode("utf-8")
+        user = Usuario(nome=nome, email=email, senha=senha_hash, cpf=cpf, telefone=telefone,
                         endereco=endereco, cidade=cidade, estado=estado, cep=cep)
         db.session.add(user)
         try:
