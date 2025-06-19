@@ -15,6 +15,7 @@ import secrets
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import getLogger, ERROR
+from extensions import db, bcrypt
 
 # Inicializar o aplicatico Flask
 app = Flask(__name__)
@@ -31,7 +32,6 @@ app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 
 # Inicializar extensões
-db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -432,4 +432,5 @@ def debug_db():
 
 
 if __name__ == "__main__":
+    db.init_app(app)
     app.run(debug=True)
