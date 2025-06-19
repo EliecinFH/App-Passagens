@@ -1,13 +1,12 @@
 from flask import Blueprint, request, redirect, url_for, render_template, flash
-from .models import Usuario, db
+from .models import Usuario
 from .validation import validate_email
 from flask_login import LoginManager, login_user, login_required, logout_user
-from flask_bcrypt import Bcrypt
+from extensions import bcrypt
 from sqlalchemy.exc import IntegrityError
 
 
 auth = Blueprint('auth', __name__)
-bcrypt = Bcrypt()
 
 # Configuração do flask-login
 login_manager = LoginManager()
@@ -68,16 +67,15 @@ def cadastro():
         # Salvar os dados no banco de dados
         user = Usuario(nome=nome, email=email, senha=bcrypt.generate_password_hash(senha).decode("utf-8"), cpf=cpf, telefone=telefone,
                         endereco=endereco, cidade=cidade, estado=estado, cep=cep)
-        db.session.add(user)
-        try:
-            db.session.commit()
-            login_user(user)
-            flash('Usuário cadastrado com sucesso', 'success')
-            return redirect(url_for('auth.login'))
-        except IntegrityError:
-            db.session.rollback()
-            flash('Erro ao cadastrar usuário. Tente novamente.', 'danger')
-            return redirect(url_for('auth.cadastro'))
+    db.session.add(user)
+    try:
+        db.session.commit()
+        flash('Usuário cadastrado com sucesso', 'success')
+        return redirect(url_for('auth.login'))
+    except IntegrityError:
+        db.session.rollback()
+        flash('Erro ao cadastrar usuário.', 'danger')
+        return redirect(url_for('auth.cadastro'))
     
     return render_template('cadastro.html')
     

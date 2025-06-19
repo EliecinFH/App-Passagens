@@ -14,31 +14,6 @@ import secrets
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import getLogger, ERROR
-from apis import realizar_pagamento_pix
-from flask_wtf.csrf import CSRFProtect, CSRFError
-from flask_mail import Message, Mail
-from werkzeug.utils import secure_filename
-from logging.handlers import SMTPHandler
-from datetime import datetime, timedelta
-import qrcode
-import io
-import base64
-import pyotp
-from flask_migrate import Migrate
-
-# Importe os blueprints
-from auth.auth import auth
-from payment.payment import payment
-from auth.passage import passage
-<<<<<<< HEAD
-from veiculo import veiculo
-
-# Carregar variáveis de ambiente
-load_dotenv()
-
-# Inicializar o aplicativo Flask
-=======
-
 
 # Inicializar o aplicatico Flask
 >>>>>>> 0b4b9f3 (update)
@@ -641,4 +616,5 @@ def debug_db():
 
 
 if __name__ == "__main__":
+    db.init_app(app)
     app.run(debug=True)
