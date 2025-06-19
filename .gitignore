@@ -8,7 +8,7 @@ __pycache__/utils.cpython-312.pyc
 auth1.py
 __init__.py
 
-# Arquivos de banco de dados
+# Banco de dados
 *.db
 *.sqlite
 *.sqlite3
@@ -16,7 +16,7 @@ instance/
 concefsa.db/
 app_passagens/app_passagens_dados/
 
-# Arquivos de cache Python
+# Cache Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -38,21 +38,21 @@ wheels/
 .installed.cfg
 *.egg
 
-# Arquivos de ambiente e configuração
+# Ambientes virtuais
 .env
-.venv
-env/
+.venv/
 venv/
+env/
 ENV/
-env.bak/
 venv.bak/
+env.bak/
 
-# Arquivos de log
+# Logs
 *.log
 logs/
 error.log
 
-# Arquivos temporários
+# Temporários
 *.tmp
 *.temp
 *.bak
@@ -60,13 +60,13 @@ error.log
 *.swo
 *~
 
-# Arquivos de IDE e editores
+# IDEs e editores
 .vscode/
 .idea/
 *.sublime-project
 *.sublime-workspace
 
-# Arquivos do sistema
+# Sistema
 .DS_Store
 .DS_Store?
 ._*
@@ -75,25 +75,19 @@ error.log
 ehthumbs.db
 Thumbs.db
 
-# Arquivos específicos do projeto
-templates/index1.html
-try.py.txt
-auth1.py
-__init__.py
-
-# Arquivos de migração (opcional - remova se quiser versionar)
+# Migrações (exceto __init__.py)
 migrations/versions/*.py
 !migrations/versions/__init__.py
 
-# Arquivos de dados de teste
+# Dados de teste
 passagens.xlsx
 passagens23.xlsx
 
-# Arquivos de configuração local
+# Configuração local
 alembic.ini
 migrate_setup.py
 
-# Arquivos de teste e desenvolvimento
+# Testes e scripts de desenvolvimento
 testa_conexao_db.py
 importa_teste.py
 popula_passagens.py
@@ -102,12 +96,12 @@ cria_usuario.py
 veiculo.py
 consulta_passagens.py
 
-# Arquivos de credenciais e chaves
+# Credenciais e chaves
 client_secret_*.json
 *.pem
 *.key
 *.crt
 
-# Arquivos de backup
+# Backup
 *.backup
 *.old
