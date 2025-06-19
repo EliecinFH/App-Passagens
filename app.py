@@ -14,6 +14,7 @@ import secrets
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import getLogger, ERROR
+from extensions import db, bcrypt
 
 # Inicializar o aplicatico Flask
 app = Flask(__name__)
