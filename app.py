@@ -195,7 +195,7 @@ def logout():
                     f'{identificador}'
                 )
                 flash("Identificador ou senha incorretos.", "danger")
-        return render_template("auth/login.html")
+        return render_template("login.html")
 
     @app.route("/verificar-2fa", methods=["GET", "POST"])
     def verificar_2fa():
