@@ -16,6 +16,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from logging import getLogger, ERROR
 from extensions import db, bcrypt
+from auth.models import Usuario
 
 def create_app():
     app = Flask(__name__)
