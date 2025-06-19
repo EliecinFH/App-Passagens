@@ -6,8 +6,6 @@ auth/__pycache__/auth.cpython-312.pyc
 __pycache__/utils.cpython-312.pyc
 *.pyc
 auth1.py
-payment/__init__.py
-payment/payment.py
 __init__.py
 
 # Arquivos de banco de dados
@@ -81,8 +79,6 @@ Thumbs.db
 templates/index1.html
 try.py.txt
 auth1.py
-payment/__init__.py
-payment/payment.py
 __init__.py
 
 # Arquivos de migração (opcional - remova se quiser versionar)
