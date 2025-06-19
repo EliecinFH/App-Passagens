@@ -1,6 +1,7 @@
 from extensions import db, bcrypt
 from flask_login import UserMixin
 from flask_bcrypt import bcrypt
+from datetime import datetime
 
 class Usuario(db.Model, UserMixin):
     """
