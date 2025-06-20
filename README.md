@@ -60,6 +60,18 @@ Este aplicativo é para clientes que passam na praça de pedágio sem meios de p
 - Veja o arquivo `DEPLOY.md` para detalhes de deploy.
 - Veja o arquivo `.gitignore` para arquivos ignorados no versionamento.
 
+# Banco de Dados PostgreSQL
+
+Configure a variável de ambiente DATABASE_URL no seguinte formato:
+
+    postgresql://USUARIO:SENHA@HOST:PORT/DATABASE
+
+Exemplo para Render:
+
+    postgresql://admin:SENHA@dpg-d1amnhbe5dus73ep9h60-a:5432/postgre_con
+
+Substitua SENHA pela senha do seu banco.
+
 ---
 
 Desenvolvido por EliecinFH.
