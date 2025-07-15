@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Início{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h1 class="mb-4">Bem-vindo à ConcefSA <span style="font-size:1.2em;"></span></h1>
+        <p>Olá, {{ current_user.nome }}! <a href="{{ url_for('auth.logout') }}"><span style="font-size:1.2em;"></span> Sair</a></p>
+        <div class="d-flex flex-column flex-md-row justify-content-center gap-3 my-4">
+            <a href="{{ url_for('saldo') }}" class="btn btn-primary"><span style="font-size:1.2em;">💰</span> Saldo</a>
+            <a href="{{ url_for('meio_pagamento') }}" class="btn btn-outline-primary"><span style="font-size:1.2em;">➕</span> Adicionar Saldo</a>
+            <a href="{{ url_for('passage.historico') }}" class="btn btn-outline-primary"><span style="font-size:1.2em;">📜</span> Histórico</a>
+            <a href="{{ url_for('pagamento_passagem') }}" class="btn btn-outline-primary"><span style="font-size:1.2em;">💳</span> Pagar Passagem</a>
+        </div>
+        <section class="mt-4">
+            <h2>Saldo <span style="font-size:1.2em;">💰</span></h2>
+            <p>Saldo atual: <strong>R$ {{ current_user.saldo or '0,00' }}</strong></p>
+        </section>
+        <section class="mt-4">
+            <h2>Área de Pagamento <span style="font-size:1.2em;">💳</span></h2>
+            <p>Aqui você pode realizar seus pagamentos de pedágio.</p>
+        </section>
+        <section class="mt-4">
+            <h2>Consulta de Passagem <span style="font-size:1.2em;">🛣️</span></h2>
+            <p>Consulte suas passagens aqui.</p>
+        </section>
+        <section class="mt-4">
+            <h2>Consulta de Placa <span style="font-size:1.2em;">🔎</span></h2>
+            <form method="get" action="{{ url_for('veiculo.filtrar_placa') }}" class="d-flex gap-2 mb-2">
+                <input type="text" name="placa" class="form-control" placeholder="Digite a placa" maxlength="10" required style="max-width:200px;">
+                <button type="submit" class="btn btn-primary">Consultar</button>
+            </form>
+            <a href="{{ url_for('veiculo.cadastrar_veiculo') }}" class="btn btn-outline-primary btn-sm mt-2">Cadastrar Veículo</a>
+        </section>
+    </div>
+</div>
+{% endblock %}

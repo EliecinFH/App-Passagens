@@ -24,9 +24,29 @@ main {
     padding: 15px;
 }
 
+.from-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.from-group label {
+    margin-bottom: 5px;
+}
+
+.from-group input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.from-group input + input {
+    margin-left: 10px;
+}
+
 form {
     background-color: #fff;
-    padding: 50px;
+    padding: 100x;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 0 40px rgb(0, 0, 0, 0.1);
@@ -38,7 +58,7 @@ label {
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
-    width: 100%;
+    width: 80%;
     height: 15px;
     margin-bottom: 20px;
     padding: 10px;

@@ -1,0 +1,15 @@
+Flask
+Flask-SQLAlchemy
+Flask-Bcrypt
+Flask-Login
+Flask-WTF
+Flask-Mail
+SQLAlchemy
+qrcode
+pyotp
+Werkzeug
+email-validator
+google-auth-oauthlib
+python-dotenv
+google-api-python-client
+flask-migrate

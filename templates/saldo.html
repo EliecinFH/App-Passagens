@@ -1,31 +1,21 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" contnet="width=device-width", initial-scale=1.0>
-    <title>Saldo - ConcefSA</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <reader>
-        <h1>ConcefSA</h1>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('payment.saldo') }}">Saldo</a></li>
-                <li><a href="{{ url_for('payment.recarga') }}">Recarga</a></li>
-                <li><a href="{{ url_for('passage.historico') }}">Histórico</a></li>
-                <li><a href=" {{ url_for('auth.logout') }}">Sair</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <h2>Seu Saldo</h2>
-        <p>R$ {{ saldo }}</p>
-    </main>
-    <footer>
-        <p>&copy; 2024 ConcefSA</p>
-    </footer>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Saldo{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-4 shadow mx-auto" style="max-width: 400px;">
+        <h2 class="mb-4 text-center">Seu Saldo <span title="Saldo"><span style="font-size:1.2em;">💰</span></span></h2>
+        <div class="saldo mb-4 display-4 text-center">R$ {{ saldo }}</div>
+        <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+            <a href="{{ url_for('meio_pagamento') }}" class="btn btn-primary">
+                <span style="font-size:1.2em;">➕</span> Adicionar Saldo
+            </a>
+            <a href="{{ url_for('passage.historico') }}" class="btn btn-outline-primary">
+                <span style="font-size:1.2em;">📜</span> Ver Histórico
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">
+                <span style="font-size:1.2em;">🚪</span> Sair
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

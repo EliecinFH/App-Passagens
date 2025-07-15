@@ -10,3 +10,4 @@ auth1.py
 payment/__init__.py
 payment/payment.py
 __init__.py
+instance/
