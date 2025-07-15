@@ -1,7 +1,7 @@
 # Exemplo de variáveis de ambiente para o Concef
 FLASK_ENV=development
 SECRET_KEY=sua_chave_secreta_aqui
-DATABASE_URL=sqlite:///instance/concefSA.db
+DATABASE_URL=postgresql://admin:EiaLknDfda3viiyi4xm28PGiPueAiobo@dpg-d1amnhbe5dus73ep9h60-a:5432/postgre_con
 MAIL_SERVER=smtp.seuservidor.com
 MAIL_PORT=587
 MAIL_USERNAME=usuario@exemplo.com

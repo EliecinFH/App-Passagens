@@ -33,7 +33,7 @@ Este aplicativo é para clientes que passam na praça de pedágio sem meios de p
 ## 🔑 Variáveis de ambiente principais
 - `SECRET_KEY`
 - `FLASK_ENV=production`
-- `DATABASE_URL=sqlite:///concefSA.db`
+- `DATABASE_URL=BANCO_DE_DADOS`
 - `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USE_TLS`, `MAIL_USERNAME`, `MAIL_PASSWORD`
 
 ## 📄 Principais rotas do sistema
