@@ -2,7 +2,8 @@
 App concef
 Este é o código fonte do app ConcefSA.
 """
-from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
@@ -15,6 +16,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from logging import getLogger, ERROR
 from extensions import db, bcrypt
+from auth.models import Usuario
 
 # Inicializar o aplicatico Flask
 app = Flask(__name__)
@@ -396,7 +398,7 @@ def pagamento_passagem():
         """
         Rota para recuperação de senha.
         Usuário informa o e-mail, recebe uma senha temporária
-        (exibida na tela para teste).
+        (enviada por e-mail e exibida na tela para teste).
         """
         senha_temporaria = None
         if request.method == "POST":
@@ -405,11 +407,26 @@ def pagamento_passagem():
             if usuario:
                 senha_temporaria = usuario.gerar_senha_temporaria()
                 db.session.commit()
-                login_user(current_user)
-                flash(
-                    "Senha temporária gerada! (Aparece na tela para teste)",
-                    "info"
-                )
+                # Enviar e-mail com a senha temporária
+                try:
+                    mail = current_app.extensions["mail"]
+                    msg = Message(
+                        'Recuperação de Senha - ConcefSA',
+                        recipients=[usuario.email]
+                    )
+                    msg.body = (
+                        f'Olá {usuario.nome},\n\n'
+                        'Você solicitou a recuperação de senha.\n'
+                        f'Sua nova senha temporária é:\n\n{senha_temporaria}\n\n'
+                        'Esta senha expira em 24 horas.\n'
+                        'Por favor, altere sua senha após fazer login.\n\n'
+                        'Atenciosamente,\nEquipe ConcefSA'
+                    )
+                    mail.send(msg)
+                    flash("Senha temporária enviada para seu e-mail!", "info")
+                except Exception as e:
+                    current_app.logger.error(f"Erro ao enviar e-mail de recuperação de senha: {e}")
+                    flash("Erro ao enviar o e-mail de recuperação. Tente novamente mais tarde.", "danger")
             else:
                 flash("E-mail não encontrado.", "danger")
         return render_template(
